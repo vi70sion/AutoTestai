@@ -1,11 +1,16 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 public class VynotekaTests {
@@ -13,17 +18,20 @@ public class VynotekaTests {
 
     @BeforeTest
     public void SetupWebDriver() throws InterruptedException {
+
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         _globalDriver = new ChromeDriver();
         _globalDriver.get("https://vynoteka.lt/");
         _globalDriver.manage().window().maximize();
         _globalDriver.manage().timeouts().implicitlyWait(2000, TimeUnit.MILLISECONDS);
-        _globalDriver.findElement(By.xpath("/html/body/div[2]/div[1]/div[2]/div/div/div/div/div[2]/div[3]/div/div[1]/button")).click();
-        Thread.sleep(2000);
-        _globalDriver.findElement(By.xpath("/html/body/div[1]/div[1]/div/div[1]/a[2]")).click();
-
-
+        WebDriverWait wait = new WebDriverWait(_globalDriver, Duration.ofSeconds(60));
+        WebElement acceptAgeButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[2]/div[1]/div[2]/div/div/div/div/div[2]/div[3]/div/div[1]/button")));
+        acceptAgeButton.click();
+        WebElement acceptCookiesButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[1]/div[1]/div/div[1]/a[2]")));
+        acceptCookiesButton.click();
+        WebElement popupCloseButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[4]/div[1]/div/div[2]/div[2]/div[2]/button")));
+        popupCloseButton.click();
     }
     @AfterTest
     public void ResetToTitle() throws InterruptedException {
@@ -62,7 +70,7 @@ public class VynotekaTests {
         Thread.sleep(1000);
         _globalDriver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div/div/div[2]/div/div/form/div[1]/div/div[3]/div/div/div[3]/div/div/span[2]/div/div/button[5]")).click();
         Thread.sleep(1000);
-        _globalDriver.findElement(By.id("email")).sendKeys("juozas.antanas8@gmail.com");
+        _globalDriver.findElement(By.id("email")).sendKeys("juozas.antanas9@gmail.com");
         Thread.sleep(1000);
         _globalDriver.findElement(By.id("phone")).sendKeys("60012345");
         Thread.sleep(1000);
@@ -79,7 +87,7 @@ public class VynotekaTests {
         //Praleisti mygtukas
         _globalDriver.findElement(By.xpath("/html/body/div[2]/div[3]/div/div/div/div[2]/div/form/div[3]/div[2]/button")).click();
         Thread.sleep(1000);
-        //Vartotojo prisijungimas
+        //Vartotojo informacija
         _globalDriver.findElement(By.cssSelector(".user-actions__link--login")).click();
         Thread.sleep(1000);
         String vardasPavarde = _globalDriver.findElement(By.xpath("/html/body/div[1]/div[1]/main/section/div/div/div/div[1]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/span")).getText();
