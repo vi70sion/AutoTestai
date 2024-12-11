@@ -113,5 +113,67 @@ public class WayToAutomation {
         }
     }
 
+    @Test
+    public void testResizable() {
+        try {
+            Thread.sleep(1000);
+            WebDriverWait wait = new WebDriverWait(_globalDriver, Duration.ofSeconds(5));
+            _globalDriver.get("https://www.way2automation.com/way2auto_jquery/resizable.php#load_box");
+            WebElement iframe = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/section/div[1]/div[1]/div[3]/div[1]/div/iframe")));
+            _globalDriver.switchTo().frame(iframe);
+            //WebElement resizable = _globalDriver.findElement(By.id("resizable"));
+            WebElement resizable = _globalDriver.findElement(By.cssSelector(".ui-resizable-se"));
+
+            Actions actions = new Actions(_globalDriver);
+            actions.clickAndHold(resizable)
+                    .moveByOffset(200, 100)
+                    .release()
+                    .perform();
+
+            int actualWidth = Integer.parseInt(resizable.getCssValue("width"));
+            int actualHeight = Integer.parseInt(resizable.getCssValue("height"));
+
+            Assert.assertEquals(actualWidth, actualWidth + 200, "Wrong width possition");
+            Assert.assertEquals(actualHeight, actualHeight + 100, "Wrong height possition");
+
+            Thread.sleep(10 * 1000);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            if (_globalDriver != null) {
+                _globalDriver.quit();
+            }
+        }
+    }
+
+    @Test
+    public void testDatepicker() {
+        try {
+            Thread.sleep(1000);
+            WebDriverWait wait = new WebDriverWait(_globalDriver, Duration.ofSeconds(5));
+            _globalDriver.get("https://www.way2automation.com/way2auto_jquery/datepicker.php#load_box");
+            WebElement iframe = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("/html/body/section/div[1]/div[1]/div[3]/div[1]/div/iframe")));
+            _globalDriver.switchTo().frame(iframe);
+
+            WebElement datepicker = _globalDriver.findElement(By.id("datepicker"));
+            datepicker.click();
+
+            WebElement specificDate = _globalDriver.findElement(By.xpath("//a[text()='15']"));
+            specificDate.click();
+
+            String actualDate = datepicker.getAttribute("value");
+            String expectetDate = "12/15/2024";
+
+            Assert.assertEquals(actualDate, expectetDate, "Selected wrong date.");
+
+            Thread.sleep(10 * 1000);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        } finally {
+            if (_globalDriver != null) {
+                _globalDriver.quit();
+            }
+        }
+    }
 
 }
